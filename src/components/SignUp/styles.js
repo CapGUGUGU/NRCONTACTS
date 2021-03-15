@@ -31,4 +31,7 @@ export default StyleSheet.create({
         paddingLeft:10,
         color:colors.primary,
     },
+    error: {
+        color:colors.danger,
+    },
 });

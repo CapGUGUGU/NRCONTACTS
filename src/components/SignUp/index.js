@@ -8,8 +8,16 @@ import {useNavigation} from '@react-navigation/core';
 import {LOGIN} from '../../constants/routeNames';
 import {useState} from 'react/cjs/react.development';
 import ShowHideBtn from '../common/ShowHideBtn';
+import Message from '../common/Message';
 
-const RegisterComponent = ({onChange, onSubmit, form, errors}) => {
+const RegisterComponent = ({
+  onChange,
+  onSubmit,
+  form,
+  errors,
+  loading,
+  error,
+}) => {
   const {navigate} = useNavigation();
   const [secureText, setSecureText] = useState(true);
   return (
@@ -19,56 +27,74 @@ const RegisterComponent = ({onChange, onSubmit, form, errors}) => {
         <Text style={styles.subTitle}>Create a free account</Text>
 
         <View style={styles.form}>
+          {error?.error && (
+            <Message
+              retry
+              retryFn={() => {
+                console.log('retryFn:>> working');
+              }}
+              message={error?.error}
+            />
+          )}
           <Input
             label="User Name"
             iconPostion="right"
             placeholder="Enter User Name"
-            onChangeText={(value) => {
+            onChangeText={value => {
               onChange({name: 'userName', value});
             }}
-            error={errors.userName}
+            error={errors.userName || error?.username?.[0]}
           />
           <Input
             label="First Name"
             iconPostion="right"
             placeholder="Enter First Name"
-            onChangeText={(value) => {
+            onChangeText={value => {
               onChange({name: 'firstName', value});
             }}
-            error={errors.firstName}
+            error={errors.firstName || error?.first_name?.[0]}
           />
           <Input
             label="Last Name"
             iconPostion="right"
             placeholder="Enter Last Name"
-            onChangeText={(value) => {
+            onChangeText={value => {
               onChange({name: 'lastName', value});
             }}
-            error={errors.lastName}
+            error={errors.lastName || error?.last_name?.[0]}
           />
           <Input
             label="Email"
             iconPostion="right"
             placeholder="Enter Email"
-            onChangeText={(value) => {
+            onChangeText={value => {
               onChange({name: 'email', value});
             }}
-            error={errors.email}
+            error={errors.email || error?.email?.[0]}
           />
           <Input
             label="Password"
             icon={
-              <ShowHideBtn secureText={secureText} setSecureText={setSecureText} />
+              <ShowHideBtn
+                secureText={secureText}
+                setSecureText={setSecureText}
+              />
             }
             iconPostion="right"
             placeholder="Enter Password"
             secureTextEntry={secureText}
-            onChangeText={(value) => {
+            onChangeText={value => {
               onChange({name: 'password', value});
             }}
-            error={errors.password}
+            error={errors.password || error?.password?.[0]}
           />
-          <CustomButton onPress={onSubmit} primary title="Submit" />
+          <CustomButton
+            loading={loading}
+            disabled={loading}
+            onPress={onSubmit}
+            primary
+            title="Submit"
+          />
           <View style={styles.createSection}>
             <Text style={styles.infoText}>Already have an account?</Text>
             <TouchableOpacity

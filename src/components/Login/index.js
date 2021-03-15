@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import Container from '../common/Container';
 import styles from './styles';
 import CustomButton from '../common/CustomButton';
 import Input from '../common/Input';
-import { useNavigation } from '@react-navigation/core';
-import { REGISTER } from '../../constants/routeNames';
+import {useNavigation} from '@react-navigation/core';
+import {REGISTER} from '../../constants/routeNames';
 import ShowHideBtn from '../common/ShowHideBtn';
+import Message from '../common/Message';
 
-const LoginComponent = () => {
+const LoginComponent = ({error, onChange, onSubmit, loading}) => {
   const {navigate} = useNavigation();
   const [secureText, setSecureText] = useState(true);
   return (
@@ -24,20 +25,47 @@ const LoginComponent = () => {
         <Text style={styles.subTitle}>Please login in</Text>
 
         <View style={styles.form}>
+          {error && !error?.error && (
+            <Message
+              retry
+              retryFn
+              primary
+              onDismiss
+              message="invalid credentials"
+            />
+          )}
+          {error?.error && <Message danger onDismiss message={error?.error} />}
           <Input
             label="Username"
             iconPostion="right"
             placeholder="Enter Username"
+            onChangeText={value => {
+              onChange({name: 'userName', value});
+            }}
             //error={'This field is required'}
           />
           <Input
             label="Password"
-            icon={<ShowHideBtn secureText={secureText} setSecureText={setSecureText} />}
+            icon={
+              <ShowHideBtn
+                secureText={secureText}
+                setSecureText={setSecureText}
+              />
+            }
+            onChangeText={value => {
+              onChange({name: 'password', value});
+            }}
             iconPostion="right"
             placeholder="Enter Password"
             secureTextEntry={secureText}
           />
-          <CustomButton primary title="Submit" />
+          <CustomButton
+            primary
+            loading={loading}
+            disabled={loading}
+            onPress={onSubmit}
+            title="Submit"
+          />
           <View style={styles.createSection}>
             <Text style={styles.infoText}>Need a new account?</Text>
             <TouchableOpacity

@@ -1,20 +1,41 @@
+import {useNavigation} from '@react-navigation/core';
 import React from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import {useContext} from 'react';
 import {useState} from 'react/cjs/react.development';
 import RegisterComponent from '../../components/SignUp';
-import axiosInstance from '../../helpers/axiosInterceptor';
+import {LOGIN} from '../../constants/routeNames';
+import register, {clearAuthState} from '../../context/actions/auth/register';
+import {GlobalContext} from '../../context/Provider';
 
 const Register = () => {
   const [form, setForm] = useState({});
+  const {navigate} = useNavigation();
   const [errors, setErrors] = useState({});
+  const {
+    authDispatch,
+    authState: {error, data, loading},
+  } = useContext(GlobalContext);
 
   React.useEffect(() => {
-    axiosInstance.post('/contacts/').catch(err => {
-      console.log('Error:>> ', err.response);
-    }); 
-  }, []);
+    if (data) {
+      navigate(LOGIN);
+    }
+  }, [data]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        if (data || error) {
+          clearAuthState()(authDispatch);
+        }
+      };
+    }, [data, error]),
+  );
 
   const onChange = ({name, value}) => {
     setForm({...form, [name]: value});
+
     if (value !== '') {
       if (name === 'password' && value.length < 6) {
         setErrors(prev => {
@@ -58,6 +79,14 @@ const Register = () => {
         return {...prev, password: 'Please add Password'};
       });
     }
+
+    if (
+      Object.values(form).length === 5 &&
+      Object.values(form).every(item => item.trim().length > 0) &&
+      Object.values(errors).every(item => !item)
+    ) {
+      register(form)(authDispatch);
+    }
   };
   return (
     <RegisterComponent
@@ -65,6 +94,8 @@ const Register = () => {
       onSubmit={onSubmit}
       form={form}
       errors={errors}
+      error={error}
+      loading={loading}
     />
   );
 };
