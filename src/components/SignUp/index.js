@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity, SafeAreaView} from 'react-native';
+import {View, Text, TouchableOpacity, SafeAreaView} from 'react-native';
 import Container from '../common/Container';
 import styles from './styles';
 import CustomButton from '../common/CustomButton';

@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import colors from '../../../assets/theme/colors';
 import styles from './styles';
 

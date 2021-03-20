@@ -1,10 +1,10 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import { useContext } from 'react';
+import {useContext} from 'react';
 import {useState} from 'react';
 import LoginComponent from '../../components/Login';
 import loginUser from '../../context/actions/auth/loginUser';
-import { GlobalContext } from '../../context/Provider';
+import {GlobalContext} from '../../context/Provider';
 
 const Login = () => {
   const [form, setForm] = useState({});
